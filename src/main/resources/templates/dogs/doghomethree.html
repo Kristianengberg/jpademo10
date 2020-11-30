@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-color: coral;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        .row {
+            display: flex;
+        }
+
+        /* Create two equal columns that sits next to each other */
+        .column {
+            /*flex: 33%;*/
+            flex-basis: 33%;
+            padding: 10px;
+        }
+
+        #headline{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="headline">Dog Home</h1>
+<h2 th:if="${loginstatus == 'yes'}">Login OK</h2>
+<div class="row">
+    <div class="column" style="background-color:#aaa">
+        <h2>Opret samarit: Navn</h2>
+        <form action="#" th:action="@{/createOwner}" th:object="${owner}" method="post">
+            <label for="ownerFirstName">Navn</label>
+            <input type="text" id="ownerFirstName" name="firstName" th:value="*{firstName}" />
+            <input type="submit" value="Submit">
+        </form>
+        <h3 th:each="owner : ${owners}" th:text="${owner.firstName}"></h3>
+    </div>
+    <div class="column" style="background-color:#bbb;">
+        <h2>Adopter hund</h2>
+        <h3>Ole : Max</h3>
+        <h3>Jens : Fido</h3>
+        <h3>Anna : Buster</h3>
+    </div>
+    <div class="column" style="background-color:#ccc;">
+        <h2>Opret hund:</h2>
+        <h3>navn og billede URL</h3>
+        <form action="#" th:action="@{/createDog}" th:object="${dog}" method="post">
+            <label for="firstName">Navn</label>
+            <input type="text" id="firstName" name="firstName" th:value="*{firstName}" />
+            <label for="url">Billede URL</label>
+            <input type="text" id="url" name="url" th:value="*{url}" />
+            <input type="submit" value="Submit">
+        </form>
+        <form th:each="dogs : ${dogs}" th:action="@{/addOwnerToDog}" th:object="${dog}" method="post">
+        <div>
+            <p type="hidden" th:field="${dogs.id}" id="dogId"></p>
+            <p th:text="${dogs.firstName}"></p>
+            <img width="400" th:src="@{${dogs.url}(dl='1')}">
+            <select>
+                <option th:each="owner : ${owners}" th:value="${owner.id}" th:text="${owner.firstName}"></option>
+            </select>
+            <input type="submit" value="Submit">
+        </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
